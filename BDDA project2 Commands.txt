@@ -1,0 +1,191 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Users\sumit> mysql -u root -p
+Enter password: ********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 28
+Server version: 8.0.39 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| myntra             |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+5 rows in set (0.01 sec)
+
+mysql> create database VoterCard;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| myntra             |
+| mysql              |
+| performance_schema |
+| sys                |
+| votercard          |
++--------------------+
+6 rows in set (0.00 sec)
+
+mysql> use votercard;
+Database changed
+mysql> CREATE TABLE Address (
+    ->     AddressID INT PRIMARY KEY,
+    ->     Street VARCHAR(100),
+    ->     City VARCHAR(50),
+    ->     State VARCHAR(50),
+    ->     ZipCode VARCHAR(10)
+    -> );
+Query OK, 0 rows affected (0.06 sec)
+
+mysql>
+mysql> CREATE TABLE Voter (
+    ->     VoterID INT PRIMARY KEY,
+    ->     FirstName VARCHAR(50),
+    ->     LastName VARCHAR(50),
+    ->     DateOfBirth DATE,
+    ->     Gender CHAR(1),
+    ->     AddressID INT,
+    ->     FOREIGN KEY (AddressID) REFERENCES Address(AddressID)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql>
+mysql> CREATE TABLE VoterID (
+    ->     VoterID INT PRIMARY KEY,
+    ->     VoterNumber VARCHAR(20) UNIQUE,
+    ->     IssueDate DATE,
+    ->     ExpiryDate DATE,
+    ->     FOREIGN KEY (VoterID) REFERENCES Voter(VoterID)
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> INSERT INTO Address (AddressID, Street, City, State, ZipCode)
+    -> VALUES
+    -> (1, '123 Main St', 'Springfield', 'IL', '62701'),
+    -> (2, '456 Elm St', 'Shelbyville', 'IL', '62565'),
+    -> (3, '789 Oak St', 'Capital City', 'IL', '62702');
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> INSERT INTO Voter (VoterID, FirstName, LastName, DateOfBirth, Gender, AddressID)
+    -> VALUES
+    -> (1, 'John', 'Doe', '1980-01-15', 'M', 1),
+    -> (2, 'Jane', 'Smith', '1992-06-25', 'F', 2),
+    -> (3, 'Bob', 'Johnson', '1975-03-30', 'M', 3);
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> INSERT INTO VoterID (VoterID, VoterNumber, IssueDate, ExpiryDate)
+    -> VALUES
+    -> (1, 'VOT123456', '2020-01-01', '2030-01-01'),
+    -> (2, 'VOT654321', '2020-02-01', '2030-02-01'),
+    -> (3, 'VOT789012', '2020-03-01', '2030-03-01');
+Query OK, 3 rows affected (0.04 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> -- Create Users
+mysql> CREATE USER 'admin_user' IDENTIFIED BY 'password1';
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> CREATE USER 'data_entry_clerk' IDENTIFIED BY 'password2';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CREATE USER 'supervisor' IDENTIFIED BY 'password3';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CREATE USER 'auditor' IDENTIFIED BY 'password4';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>
+mysql> -- Create Roles
+mysql> CREATE ROLE admin_role;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> CREATE ROLE data_entry_role;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> CREATE ROLE supervisor_role;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> CREATE ROLE auditor_role;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql>
+mysql> -- Assign Roles to Users
+mysql> GRANT admin_role TO 'admin_user';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> GRANT data_entry_role TO 'data_entry_clerk';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> GRANT supervisor_role TO 'supervisor';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> GRANT auditor_role TO 'auditor';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> -- Admin Role: Full access to all tables
+mysql> GRANT ALL PRIVILEGES ON Address TO admin_role;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> GRANT ALL PRIVILEGES ON Voter TO admin_role;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> GRANT ALL PRIVILEGES ON VoterID TO admin_role;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql>
+mysql> -- Data Entry Role: Insert and Update only
+mysql> GRANT INSERT, UPDATE ON Address TO data_entry_role;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> GRANT INSERT, UPDATE ON Voter TO data_entry_role;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> GRANT INSERT, UPDATE ON VoterID TO data_entry_role;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql>
+mysql> -- Supervisor Role: Select and Update
+mysql> GRANT SELECT, UPDATE ON Address TO supervisor_role;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> GRANT SELECT, UPDATE ON Voter TO supervisor_role;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> GRANT SELECT, UPDATE ON VoterID TO supervisor_role;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql>
+mysql> -- Auditor Role: Read-Only access
+mysql> GRANT SELECT ON Address TO auditor_role;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> GRANT SELECT ON Voter TO auditor_role;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> GRANT SELECT ON VoterID TO auditor_role;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>
